@@ -48,6 +48,7 @@ written by
    #include <unistd.h>
 #endif
 #include <cstring>
+#include <iostream>
 #include "api.h"
 #include "core.h"
 
