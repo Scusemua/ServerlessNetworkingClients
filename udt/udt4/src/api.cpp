@@ -258,11 +258,15 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    if ((type != SOCK_STREAM) && (type != SOCK_DGRAM))
       throw CUDTException(5, 3, 0);
 
+   std::cout << "Function \"newSocket\" called." << std::endl;
+
    CUDTSocket* ns = NULL;
 
    try
    {
+      std::cout << "About to call CUDTSocket constructor..." << std::endl;
       ns = new CUDTSocket;
+      std::cout << "Finished call to CUDTSocket constructor." << std::endl;
       ns->m_pUDT = new CUDT;
       if (AF_INET == af)
       {
@@ -281,9 +285,13 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
       throw CUDTException(3, 2, 0);
    }
 
+   std::cout << "About to acquire \"m_IDLock\" to modify ns->m_SocketID" << std::endl;
+
    CGuard::enterCS(m_IDLock);
    ns->m_SocketID = -- m_SocketID;
    CGuard::leaveCS(m_IDLock);
+
+   std::cout << "Finished modifying value of ns->m_SocketID in CS." << std::endl;
 
    ns->m_Status = INIT;
    ns->m_ListenSocket = 0;
@@ -291,6 +299,8 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    ns->m_pUDT->m_iSockType = (SOCK_STREAM == type) ? UDT_STREAM : UDT_DGRAM;
    ns->m_pUDT->m_iIPversion = ns->m_iIPversion = af;
    ns->m_pUDT->m_pCache = m_pCache;
+
+   std::cout << "About to acquire lock \"m_ControlLock\" to modify m_Sockets[ns->m_SocketID]." << std::endl;
 
    // protect the m_Sockets structure.
    CGuard::enterCS(m_ControlLock);
@@ -306,6 +316,8 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
       ns = NULL;
    }
    CGuard::leaveCS(m_ControlLock);
+
+   std::cout << "Finished with lock m_ControlLock and its associated CS." << std::endl;
 
    if (NULL == ns)
       throw CUDTException(3, 2, 0);

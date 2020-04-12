@@ -547,6 +547,7 @@ class UDTSocket(object):
             cases.
         """
         super(UDTSocket, self).__init__()
+        print("Creating new UDTSocket object.", flush = True)
         self.socket = None
         if family != AF_INET and family != AF_INET6:
             raise ValueError("Unsupported address family.")
