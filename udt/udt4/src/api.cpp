@@ -432,6 +432,9 @@ int CUDTUnited::newConnection(const UDTSOCKET listen, const sockaddr* peer, CHan
    ns->m_pUDT->m_pSndQueue->m_pChannel->getSockAddr(ns->m_pSelfAddr);
    CIPAddress::pton(ns->m_pSelfAddr, ns->m_pUDT->m_piSelfIP, ns->m_iIPversion);
 
+   pid_t pid = getpid();
+   std::cout << "[" << pid << "] - Entering CS associated with \"m_ControlLock\" in \"newConnection()\" function." << std:endl;
+
    // protect the m_Sockets structure.
    CGuard::enterCS(m_ControlLock);
    try
@@ -444,6 +447,8 @@ int CUDTUnited::newConnection(const UDTSOCKET listen, const sockaddr* peer, CHan
       error = 2;
    }
    CGuard::leaveCS(m_ControlLock);
+
+   std::cout << "[" << pid << "] - Exiting CS associated with \"m_ControlLock\" in \"newConnection()\" function." << std:endl;
 
    CGuard::enterCS(ls->m_AcceptLock);
    try
