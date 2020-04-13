@@ -310,6 +310,7 @@ UDT_API extern const UDTSOCKET INVALID_SOCK;
 UDT_API extern const int ERROR;
 
 UDT_API int startup();
+UDT_API int recreateLocks();
 UDT_API int cleanup();
 UDT_API UDTSOCKET socket(int af, int type, int protocol);
 UDT_API int bind(UDTSOCKET u, const struct sockaddr* name, int namelen);
