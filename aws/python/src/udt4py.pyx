@@ -554,7 +554,7 @@ class UDTSocket(object):
             cases.
         """
         super(UDTSocket, self).__init__()
-        print("Entered Python-level UDTSocket constructor.", flush = True)
+        #print("Entered Python-level UDTSocket constructor.", flush = True)
         self.socket = None
         if family != AF_INET and family != AF_INET6:
             raise ValueError("Unsupported address family.")
@@ -570,7 +570,7 @@ class UDTSocket(object):
             mysocket = socket(family, type, 0)  # ignored
         if mysocket == INVALID_SOCK:
             raise UDTException()
-        print("Exiting Python-level UDTSocket constructor.", flush = True)
+        #print("Exiting Python-level UDTSocket constructor.", flush = True)
         self.socket = mysocket
 
     def __del__(self):
