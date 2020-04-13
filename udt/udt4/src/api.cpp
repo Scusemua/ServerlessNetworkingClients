@@ -185,6 +185,8 @@ int CUDTUnited::startup()
 {
    CGuard gcinit(m_InitLock);
 
+   std::cout << "Calling CUDTUnited.startup() (in C++)." << std::endl;
+
    if (m_iInstanceCount++ > 0)
       return 0;
 
@@ -304,7 +306,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    ns->m_pUDT->m_iIPversion = ns->m_iIPversion = af;
    ns->m_pUDT->m_pCache = m_pCache;
 
-   std::cout << "[" << currentPid << "] - " << "About to acquire lock \"m_ControlLock\" to modify m_Sockets[ns->m_SocketID]." << std::endl;
+   std::cout << "[" << currentPid << "] - " << "About to acquire lock \"m_ControlLock\" (0x" << &m_ControlLock << ") to modify m_Sockets[ns->m_SocketID]." << std::endl;
 
    // protect the m_Sockets structure.
    CGuard::enterCS(m_ControlLock);
@@ -321,7 +323,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    }
    CGuard::leaveCS(m_ControlLock);
 
-   std::cout << "[" << currentPid << "] - " << "Finished with lock m_ControlLock and its associated CS." << std::endl;
+   std::cout << "[" << currentPid << "] - " << "Finished with lock m_ControlLock (0x" << &m_ControlLock << ") and its associated CS." << std::endl;
 
    if (NULL == ns)
       throw CUDTException(3, 2, 0);
