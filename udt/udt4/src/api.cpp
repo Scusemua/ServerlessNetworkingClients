@@ -161,7 +161,29 @@ m_ClosedSockets()
    m_pCache = new CCache<CInfoBlock>;
 }
 
-CUDTUnited::recreateLocks() {
+CUDTUnited::~CUDTUnited()
+{
+   #ifndef WIN32
+      pthread_mutex_destroy(&m_ControlLock);
+      pthread_mutex_destroy(&m_IDLock);
+      pthread_mutex_destroy(&m_InitLock);
+   #else
+      CloseHandle(m_ControlLock);
+      CloseHandle(m_IDLock);
+      CloseHandle(m_InitLock);
+   #endif
+
+   #ifndef WIN32
+      pthread_key_delete(m_TLSError);
+   #else
+      TlsFree(m_TLSError);
+      CloseHandle(m_TLSLock);
+   #endif
+
+   delete m_pCache;
+}
+
+int CUDTUnited::recreateLocks() {
    #ifndef WIN32
       std::cout << "[" << getpid() << "] Destroying \"m_ControlLock\", \"m_IDLock\", and \"m_InitLock\" in RecreateLocks() for CUDTUnited." << std::endl;
 
@@ -184,29 +206,9 @@ CUDTUnited::recreateLocks() {
       m_ControlLock = CreateMutex(NULL, false, NULL);
       m_IDLock = CreateMutex(NULL, false, NULL);
       m_InitLock = CreateMutex(NULL, false, NULL);
-   #endif   
-}
+   #endif  
 
-CUDTUnited::~CUDTUnited()
-{
-   #ifndef WIN32
-      pthread_mutex_destroy(&m_ControlLock);
-      pthread_mutex_destroy(&m_IDLock);
-      pthread_mutex_destroy(&m_InitLock);
-   #else
-      CloseHandle(m_ControlLock);
-      CloseHandle(m_IDLock);
-      CloseHandle(m_InitLock);
-   #endif
-
-   #ifndef WIN32
-      pthread_key_delete(m_TLSError);
-   #else
-      TlsFree(m_TLSError);
-      CloseHandle(m_TLSLock);
-   #endif
-
-   delete m_pCache;
+   return 0; 
 }
 
 int CUDTUnited::startup()
