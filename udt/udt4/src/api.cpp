@@ -311,7 +311,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    std::cout << "[" << currentPid << "] - " << "About to acquire lock \"m_ControlLock\" (0x" << &m_ControlLock << ") to modify m_Sockets[ns->m_SocketID]." << std::endl;
 
    // protect the m_Sockets structure.
-   // CGuard::enterCS(m_ControlLock);
+   CGuard::enterCS(m_ControlLock);
    try
    {
       m_Sockets[ns->m_SocketID] = ns;
@@ -319,11 +319,11 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    catch (...)
    {
       //failure and rollback
-      // CGuard::leaveCS(m_ControlLock);
+      CGuard::leaveCS(m_ControlLock);
       delete ns;
       ns = NULL;
    }
-   // CGuard::leaveCS(m_ControlLock);
+   CGuard::leaveCS(m_ControlLock);
 
    std::cout << "[" << currentPid << "] - " << "Finished with lock m_ControlLock (0x" << &m_ControlLock << ") and its associated CS." << std::endl;
 
