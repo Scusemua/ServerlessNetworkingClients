@@ -563,7 +563,7 @@ class UDTSocket(object):
             mysocket = socket(family, type, 0)  # ignored
         if mysocket == INVALID_SOCK:
             raise UDTException()
-        print("Executing Python-level UDTSocket constructor.", flush = True)
+        print("Exiting Python-level UDTSocket constructor.", flush = True)
         self.socket = mysocket
 
     def __del__(self):

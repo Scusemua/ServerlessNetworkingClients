@@ -140,6 +140,8 @@ m_ClosedSockets()
    m_SocketID = 1 + (int)((1 << 30) * (double(rand()) / RAND_MAX));
 
    #ifndef WIN32
+      std::cout << "[" << getpid << "] Creating \"m_ControlLock\", \"m_IDLock\", and \"m_InitLock\" in constructor for CUDTUnited." << std::endl;
+
       pthread_mutex_init(&m_ControlLock, NULL);
       pthread_mutex_init(&m_IDLock, NULL);
       pthread_mutex_init(&m_InitLock, NULL);
@@ -309,7 +311,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    std::cout << "[" << currentPid << "] - " << "About to acquire lock \"m_ControlLock\" (0x" << &m_ControlLock << ") to modify m_Sockets[ns->m_SocketID]." << std::endl;
 
    // protect the m_Sockets structure.
-   CGuard::enterCS(m_ControlLock);
+   // CGuard::enterCS(m_ControlLock);
    try
    {
       m_Sockets[ns->m_SocketID] = ns;
@@ -317,11 +319,11 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    catch (...)
    {
       //failure and rollback
-      CGuard::leaveCS(m_ControlLock);
+      // CGuard::leaveCS(m_ControlLock);
       delete ns;
       ns = NULL;
    }
-   CGuard::leaveCS(m_ControlLock);
+   // CGuard::leaveCS(m_ControlLock);
 
    std::cout << "[" << currentPid << "] - " << "Finished with lock m_ControlLock (0x" << &m_ControlLock << ") and its associated CS." << std::endl;
 
@@ -481,7 +483,7 @@ int CUDTUnited::newConnection(const UDTSOCKET listen, const sockaddr* peer, CHan
    return 1;
 }
 
-CUDT* CUDTUnited::lookup(const UDTSOCKET u)
+CUDT* CUDTUnited::const UDTSOCKET u)
 {
    // protects the m_Sockets structure
    CGuard cg(m_ControlLock);
