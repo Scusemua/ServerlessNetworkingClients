@@ -276,7 +276,7 @@ from functools import wraps
 
 version = "1.0"
 
-print("Calling startup() from udt4py.pyx...", flush = True)
+#print("Calling startup() from udt4py.pyx...", flush = True)
 if startup() == ERROR:
     raise UDTException()
 

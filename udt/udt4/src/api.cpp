@@ -215,7 +215,7 @@ int CUDTUnited::startup()
 {
    CGuard gcinit(m_InitLock);
 
-   std::cout << "Calling CUDTUnited.startup() (in C++)." << std::endl;
+   //std::cout << "Calling CUDTUnited.startup() (in C++)." << std::endl;
 
    if (m_iInstanceCount++ > 0)
       return 0;
@@ -294,15 +294,15 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    if ((type != SOCK_STREAM) && (type != SOCK_DGRAM))
       throw CUDTException(5, 3, 0);
 
-   std::cout << "[" << currentPid << "] - " << "Function \"newSocket\" called." << std::endl;
+   // << "[" << currentPid << "] - " << "Function \"newSocket\" called." << std::endl;
 
    CUDTSocket* ns = NULL;
 
    try
    {
-      std::cout << "[" << currentPid << "] - " << "About to call CUDTSocket constructor..." << std::endl;
+      //std::cout << "[" << currentPid << "] - " << "About to call CUDTSocket constructor..." << std::endl;
       ns = new CUDTSocket;
-      std::cout << "[" << currentPid << "] - " << "Finished call to CUDTSocket constructor." << std::endl;
+      //std::cout << "[" << currentPid << "] - " << "Finished call to CUDTSocket constructor." << std::endl;
       ns->m_pUDT = new CUDT;
       if (AF_INET == af)
       {
@@ -321,13 +321,13 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
       throw CUDTException(3, 2, 0);
    }
 
-   std::cout << "[" << currentPid << "] - " << "About to acquire \"m_IDLock\" to modify ns->m_SocketID" << std::endl;
+   //std::cout << "[" << currentPid << "] - " << "About to acquire \"m_IDLock\" to modify ns->m_SocketID" << std::endl;
 
    CGuard::enterCS(m_IDLock);
    ns->m_SocketID = -- m_SocketID;
    CGuard::leaveCS(m_IDLock);
 
-   std::cout << "[" << currentPid << "] - " << "Finished modifying value of ns->m_SocketID in CS." << std::endl;
+   //std::cout << "[" << currentPid << "] - " << "Finished modifying value of ns->m_SocketID in CS." << std::endl;
 
    ns->m_Status = INIT;
    ns->m_ListenSocket = 0;
@@ -336,7 +336,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    ns->m_pUDT->m_iIPversion = ns->m_iIPversion = af;
    ns->m_pUDT->m_pCache = m_pCache;
 
-   std::cout << "[" << currentPid << "] - " << "About to acquire lock \"m_ControlLock\" (0x" << &m_ControlLock << ") to modify m_Sockets[ns->m_SocketID]." << std::endl;
+   //std::cout << "[" << currentPid << "] - " << "About to acquire lock \"m_ControlLock\" (0x" << &m_ControlLock << ") to modify m_Sockets[ns->m_SocketID]." << std::endl;
 
    // protect the m_Sockets structure.
    CGuard::enterCS(m_ControlLock);
@@ -353,7 +353,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    }
    CGuard::leaveCS(m_ControlLock);
 
-   std::cout << "[" << currentPid << "] - " << "Finished with lock m_ControlLock (0x" << &m_ControlLock << ") and its associated CS." << std::endl;
+   //std::cout << "[" << currentPid << "] - " << "Finished with lock m_ControlLock (0x" << &m_ControlLock << ") and its associated CS." << std::endl;
 
    if (NULL == ns)
       throw CUDTException(3, 2, 0);
@@ -460,7 +460,7 @@ int CUDTUnited::newConnection(const UDTSOCKET listen, const sockaddr* peer, CHan
    ns->m_pUDT->m_pSndQueue->m_pChannel->getSockAddr(ns->m_pSelfAddr);
    CIPAddress::pton(ns->m_pSelfAddr, ns->m_pUDT->m_piSelfIP, ns->m_iIPversion);
 
-   std::cout << "[" << getpid() << "] - Entering CS associated with \"m_ControlLock\" in \"newConnection()\" function." << std::endl;
+   //std::cout << "[" << getpid() << "] - Entering CS associated with \"m_ControlLock\" in \"newConnection()\" function." << std::endl;
 
    // protect the m_Sockets structure.
    CGuard::enterCS(m_ControlLock);
@@ -475,7 +475,7 @@ int CUDTUnited::newConnection(const UDTSOCKET listen, const sockaddr* peer, CHan
    }
    CGuard::leaveCS(m_ControlLock);
 
-   std::cout << "[" << getpid() << "] - Exiting CS associated with \"m_ControlLock\" in \"newConnection()\" function." << std::endl;
+   //std::cout << "[" << getpid() << "] - Exiting CS associated with \"m_ControlLock\" in \"newConnection()\" function." << std::endl;
 
    CGuard::enterCS(ls->m_AcceptLock);
    try
@@ -1619,7 +1619,7 @@ UDTSOCKET CUDT::socket(int af, int type, int)
 {
    pid_t currentPid = getpid();
 
-   std::cout << "[" << currentPid << "] - " << "Entered \"socket(int af, int type, int)\" function." << std::endl;
+   //std::cout << "[" << currentPid << "] - " << "Entered \"socket(int af, int type, int)\" function." << std::endl;
 
    if (!s_UDTUnited.m_bGCStatus)
       s_UDTUnited.startup();
@@ -1644,7 +1644,7 @@ UDTSOCKET CUDT::socket(int af, int type, int)
       return INVALID_SOCK;
    }
 
-   std::cout << "[" << currentPid << "] - " << "Returning from \"socket(int af, int type, int)\" function." << std::endl;
+   //std::cout << "[" << currentPid << "] - " << "Returning from \"socket(int af, int type, int)\" function." << std::endl;
 }
 
 int CUDT::bind(UDTSOCKET u, const sockaddr* name, int namelen)
