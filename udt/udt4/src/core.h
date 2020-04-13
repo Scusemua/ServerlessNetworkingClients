@@ -76,6 +76,7 @@ private: // constructor and desctructor
    ~CUDT();
 
 public: //API
+   static int recreateLocks();
    static int startup();
    static int cleanup();
    static UDTSOCKET socket(int af, int type = SOCK_STREAM, int protocol = 0);

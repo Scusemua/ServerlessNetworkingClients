@@ -104,6 +104,8 @@ public:
 
 public:
 
+   int recreateLocks();
+
       // Functionality:
       //    initialize the UDT library.
       // Parameters:

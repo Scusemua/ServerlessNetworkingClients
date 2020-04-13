@@ -224,6 +224,7 @@ cdef extern from "udt4/src/udt.h" namespace "UDT" nogil:
     const int ERROR
 
     int startup()
+    int recreateLocks()
     int cleanup()
     UDTSOCKET socket(int af, int type, int protocol)
     int bind(UDTSOCKET u, const sockaddr* name, int namelen)
@@ -279,6 +280,12 @@ print("Calling startup() from udt4py.pyx...", flush = True)
 if startup() == ERROR:
     raise UDTException()
 
+
+def recreateUDTLocks():
+    """
+    Call the recreateLocks() method of libudt4.
+    """
+    recreateLocks()
 
 def shutdown():
     """

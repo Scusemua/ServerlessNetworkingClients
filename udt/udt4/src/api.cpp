@@ -161,6 +161,32 @@ m_ClosedSockets()
    m_pCache = new CCache<CInfoBlock>;
 }
 
+CUDTUnited::recreateLocks() {
+   #ifndef WIN32
+      std::cout << "[" << getpid() << "] Destroying \"m_ControlLock\", \"m_IDLock\", and \"m_InitLock\" in RecreateLocks() for CUDTUnited." << std::endl;
+
+      pthread_mutex_destroy(&m_ControlLock);
+      pthread_mutex_destroy(&m_IDLock);
+      pthread_mutex_destroy(&m_InitLock);
+   #else
+      CloseHandle(m_ControlLock);
+      CloseHandle(m_IDLock);
+      CloseHandle(m_InitLock);
+   #endif   
+
+   #ifndef WIN32
+      std::cout << "[" << getpid() << "] Creating \"m_ControlLock\", \"m_IDLock\", and \"m_InitLock\" in RecreateLocks() for CUDTUnited." << std::endl;
+
+      pthread_mutex_init(&m_ControlLock, NULL);
+      pthread_mutex_init(&m_IDLock, NULL);
+      pthread_mutex_init(&m_InitLock, NULL);
+   #else
+      m_ControlLock = CreateMutex(NULL, false, NULL);
+      m_IDLock = CreateMutex(NULL, false, NULL);
+      m_InitLock = CreateMutex(NULL, false, NULL);
+   #endif   
+}
+
 CUDTUnited::~CUDTUnited()
 {
    #ifndef WIN32
@@ -1573,6 +1599,10 @@ void CUDTUnited::updateMux(CUDTSocket* s, const CUDTSocket* ls)
 
 ////////////////////////////////////////////////////////////////////////////////
 
+int CUDT::recreateLocks() {
+   return s_UDTUnited.recreateLocks();
+}
+
 int CUDT::startup()
 {
    return s_UDTUnited.startup();
@@ -2191,6 +2221,10 @@ namespace UDT
 int startup()
 {
    return CUDT::startup();
+}
+
+int recreateLocks() {
+   return CUDT::recreateLocks();
 }
 
 int cleanup()
