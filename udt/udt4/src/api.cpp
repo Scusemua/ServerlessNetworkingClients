@@ -290,7 +290,7 @@ int CUDTUnited::cleanup()
 
 UDTSOCKET CUDTUnited::newSocket(int af, int type)
 {
-   pid_t currentPid = getpid();
+   //pid_t currentPid = getpid();
    if ((type != SOCK_STREAM) && (type != SOCK_DGRAM))
       throw CUDTException(5, 3, 0);
 
@@ -1617,7 +1617,7 @@ int CUDT::cleanup()
 
 UDTSOCKET CUDT::socket(int af, int type, int)
 {
-   pid_t currentPid = getpid();
+   //pid_t currentPid = getpid();
 
    //std::cout << "[" << currentPid << "] - " << "Entered \"socket(int af, int type, int)\" function." << std::endl;
 
