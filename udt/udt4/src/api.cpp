@@ -347,7 +347,7 @@ UDTSOCKET CUDTUnited::newSocket(int af, int type)
    catch (...)
    {
       //failure and rollback
-      CGuard::leaveCS(m_ControlLock);
+      //CGuard::leaveCS(m_ControlLock);
       delete ns;
       ns = NULL;
    }
